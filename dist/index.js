@@ -100,10 +100,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.onDrop = _this.onDrop.bind(_this);
 	    _this.onFileDialogCancel = _this.onFileDialogCancel.bind(_this);
 	    _this.fileAccepted = _this.fileAccepted.bind(_this);
+	    _this.isFileDialogActive = false;
 	
 	    _this.state = {
-	      isDragActive: false,
-	      isFileDialogActive: false
+	      isDragActive: false
 	    };
 	    return _this;
 	  }
@@ -224,9 +224,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          this.props.onDropAccepted.call(this, acceptedFiles, e);
 	        }
 	      }
-	      this.setState({
-	        isFileDialogActive: false
-	      });
+	      this.isFileDialogActive = false;
 	    }
 	  }, {
 	    key: 'onClick',
@@ -238,24 +236,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'onFileDialogCancel',
 	    value: function onFileDialogCancel() {
-	      var _this2 = this;
-	
 	      // timeout will not recognize context of this method
 	      var onFileDialogCancel = this.props.onFileDialogCancel;
 	      var fileInputEl = this.fileInputEl;
+	      var isFileDialogActive = this.isFileDialogActive;
 	      // execute the timeout only if the onFileDialogCancel is defined and FileDialog
 	      // is opened in the browser
 	
-	      if (onFileDialogCancel && this.state.isFileDialogActive) {
+	      if (onFileDialogCancel && isFileDialogActive) {
 	        setTimeout(function () {
 	          // Returns an object as FileList
 	          var FileList = fileInputEl.files;
 	          if (!FileList.length) {
-	            _this2.setState({
-	              isFileDialogActive: false
-	            }, onFileDialogCancel());
+	            isFileDialogActive = false;
+	            onFileDialogCancel();
 	          }
-	        }, 100);
+	        }, 300);
 	      }
 	    }
 	  }, {
@@ -276,14 +272,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'open',
 	    value: function open() {
-	      this.setState({ isFileDialogActive: true });
+	      this.isFileDialogActive = true;
 	      this.fileInputEl.value = null;
 	      this.fileInputEl.click();
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this3 = this;
+	      var _this2 = this;
 	
 	      var _props = this.props;
 	      var accept = _props.accept;
@@ -350,7 +346,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        style: { display: 'none' },
 	        multiple: supportMultiple && multiple,
 	        ref: function ref(el) {
-	          return _this3.fileInputEl = el;
+	          return _this2.fileInputEl = el;
 	        }, // eslint-disable-line
 	        onChange: this.onDrop
 	      };
